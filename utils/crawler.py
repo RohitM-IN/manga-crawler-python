@@ -1,6 +1,5 @@
 import cloudscraper
 from fp.fp import FreeProxy
-import requests
 
 scraper = cloudscraper.create_scraper(interpreter='nodejs',delay=10,browser={
         'browser': 'chrome',
@@ -25,9 +24,8 @@ class crawler:
         except:
             return None
 
-    def post(self,data,headers):
-        # requests.post(self.url,data=data,headers=self.headers)
-        return scraper.post(self.url,data=data,headers=headers).content
+    def post(self,data):
+        return scraper.post(self.url,data=data,headers=self.headers).content
 
 
 

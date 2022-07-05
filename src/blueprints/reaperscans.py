@@ -1,13 +1,14 @@
 from flask import Blueprint, jsonify, request, abort
 from utils.cleaner import reaper
 from werkzeug.exceptions import BadRequest
-from utils.cache import cache
+from utils.cache import cache, getCache
 from utils.utils import response, make_error
+import os
 
 reaperscans = Blueprint(name="Reaper", import_name=__name__)
 
 @reaperscans.route("/", methods=["GET"])
-@cache.cached(timeout=50)
+@cache.cached(timeout=int(os.getenv('CACHE_TIME')))
 def getList():
     data = []
     count = 0
@@ -25,21 +26,26 @@ def getList():
     return response(data)
 
 @reaperscans.route("/manga", methods=["GET"])
-@cache.cached(timeout=50)
 def getManga():
     url = request.args.get('url')
     if url == None:
-        abort(make_error(400, "Bad Request", "url is required"))
-    data = reaper(url).getManga()
+        return make_error(400, "Invalid or missing url parameter", "Missing Parameter")
+    def callback():
+        return reaper(url).getManga()
+    
+    data = getCache(url,callback)
+
     return response(data)
 
 
 @reaperscans.route("/chapter", methods=["GET"])
-@cache.cached(timeout=50)
+@cache.cached(timeout=int(os.getenv('CACHE_TIME')))
 def getChapter():
     url = request.args.get('url')
     if url == None:
-        abort(make_error(400, "Bad Request", "url is required"))
-    data = reaper(url).getChapter()
+        return make_error(400, "Invalid or missing url parameter", "Missing Parameter")
+    def callback():
+        return reaper(url).getChapter()
+    data = getCache(url,callback)
     return response(data)
 

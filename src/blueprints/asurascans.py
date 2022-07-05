@@ -1,13 +1,14 @@
 from flask import Blueprint, jsonify, request, abort
 from utils.cleaner import asura
 from werkzeug.exceptions import BadRequest
-from utils.cache import cache
+from utils.cache import cache, getCache
 from utils.utils import response, make_error
+import os
 
 asurascans = Blueprint(name="asurascans", import_name=__name__)
 
 @asurascans.route("/", methods=["GET"])
-@cache.cached(timeout=50)
+@cache.cached(timeout=int(os.getenv('CACHE_TIME')))
 def getList():
     data = []
     count = 1
@@ -25,26 +26,24 @@ def getList():
     return response(data)
 
 @asurascans.route("//manga", methods=["GET"])
-@cache.cached(timeout=50)
 def getManga():
     url = request.args.get("url")
     if url == None:
         return make_error(400, "Invalid or missing url parameter", "Missing Parameter")
-    data = asura(url).getManga()
 
-    if data == None:
-        cache.clear()
+    def callback():
+        return asura(url).getManga()
+    data = getCache(url,callback)
 
     return response(data)
 
 
-@asurascans.route("//chapter", methods=["GET"])
-@cache.cached(timeout=50)
+@asurascans.route("/chapter", methods=["GET"])
 def getChapter():
     url = request.args.get("url")
     if url == None:
         return make_error(400, "Invalid or missing url parameter", "Missing Parameter")
-    data = asura(url).getChapter()
-    if data == None:
-        cache.clear()
+    def callback():
+        return asura(url).getChapter()
+    data = getCache(url,callback)
     return response(list(filter(None,data)))

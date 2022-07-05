@@ -6,7 +6,7 @@ import sys
 
 config = {
     "CACHE_TYPE": "SimpleCache",  # Flask-Caching related configs
-    "CACHE_DEFAULT_TIMEOUT": 300
+    "CACHE_DEFAULT_TIMEOUT": 600
 }
 
 app = Flask(__name__)
