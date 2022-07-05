@@ -1,0 +1,19 @@
+version: '3.8'
+
+networks:
+  default:
+    name: nginxproxymanager
+    external: true
+
+
+services:
+  wsgi:
+    build: '.'
+    container_name: manga_crawler_wsgi
+    restart: always
+    volumes:
+      - .:/app
+    environment:
+      - APP_NAME=MangaCrawler
+        
+    
