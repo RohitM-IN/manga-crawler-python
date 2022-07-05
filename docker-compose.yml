@@ -11,5 +11,3 @@ services:
       - .:/app
     environment:
       - APP_NAME=MangaCrawler
-        
-    
