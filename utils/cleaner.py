@@ -33,8 +33,8 @@ class asura:
 
         for el in elements:
             title = el.find('div',{'class': 'tt'}).get_text(strip=True)
-            image = el.find('img')['src']
-            url = el.find('a')['href']
+            image = el.find('img').get('src')
+            url = el.find('a').get('href')
             chapter = el.find('div',{'class': 'epxs'}).get_text(strip=True)
             rating = el.find('div',{'class': 'numscore'}).get_text(strip=True)
 
@@ -64,7 +64,7 @@ class asura:
         for element in chapters:
             ch = {
                 'title': element.find('span',{'class': 'chapternum'}).get_text(strip=True),
-                'url': element.find('a')['href'],
+                'url': element.find('a').get('href'),
                 'date': element.find('span',{'class': 'chapterdate'}).get_text(strip=True)
             }
             chapter.append(ch)
@@ -76,7 +76,7 @@ class asura:
 
         manga = {
             'title': details.select_one('h1.entry-title').get_text(strip=True),
-            'image': el.find('img')['src'],
+            'image': el.find('img').get('src'),
             'description': el.find('div',{'class': 'entry-content'}).get_text(strip=True),
             'genre': genre,
             'type': el.find('div',{'class': 'tsinfo'}).select_one('div.imptdt:nth-of-type(2) > a').get_text(strip=True),
@@ -91,6 +91,6 @@ class asura:
         image = []
 
         for element in el.find_all('img')[1:-1]:
-            image.append(element['src'])
+            image.append(element.get('src'))
 
         return image

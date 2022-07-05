@@ -1,7 +1,11 @@
 import cloudscraper
 from fp.fp import FreeProxy
 
-scraper = cloudscraper.create_scraper(interpreter='nodejs',delay=10)
+scraper = cloudscraper.create_scraper(interpreter='nodejs',delay=10,browser={
+        'browser': 'chrome',
+        'platform': 'android',
+        'desktop': False
+    })
 
 
 class crawler:
