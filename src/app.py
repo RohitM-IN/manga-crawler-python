@@ -1,5 +1,5 @@
 from flask import Flask, jsonify
-from utils.cleaner import response
+from utils.utils import response
 from werkzeug import exceptions
 from utils.cache import cache
 import sys
@@ -16,10 +16,12 @@ cache.init_app(app)
 
 
 from src.blueprints.asurascans import asurascans
+from src.blueprints.reaperscans import reaperscans
 from src.blueprints.errors import errors
 
 app.register_blueprint(errors)
-app.register_blueprint(asurascans, url_prefix='/api/v1/')
+app.register_blueprint(asurascans, url_prefix='/api/v1/asura')
+app.register_blueprint(reaperscans, url_prefix='/api/v1/reaper')
 
 
 @app.route('/')

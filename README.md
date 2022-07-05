@@ -5,7 +5,7 @@ This is a simple manga scraper built in python with capablities of bypassing clo
 ## Supported Manga Website
 
 * [X] Asura Scans
-* [ ] Reaper Scans
+* [X] Reaper Scans
 * [ ] Isekai Scans
 * [ ] Flamescans.org
 * [ ] MCReader
@@ -30,4 +30,3 @@ docker-compose up
 ```
 
 The port it will expose to the network will be 80
-

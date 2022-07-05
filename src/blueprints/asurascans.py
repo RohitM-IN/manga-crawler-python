@@ -1,11 +1,12 @@
 from flask import Blueprint, jsonify, request, abort
-from utils.cleaner import asura, response, make_error
+from utils.cleaner import asura
 from werkzeug.exceptions import BadRequest
 from utils.cache import cache
+from utils.utils import response, make_error
 
 asurascans = Blueprint(name="asurascans", import_name=__name__)
 
-@asurascans.route("/asura", methods=["GET"])
+@asurascans.route("/", methods=["GET"])
 @cache.cached(timeout=50)
 def getList():
     data = []
@@ -23,7 +24,7 @@ def getList():
             cache.clear()
     return response(data)
 
-@asurascans.route("/asura/manga", methods=["GET"])
+@asurascans.route("//manga", methods=["GET"])
 @cache.cached(timeout=50)
 def getManga():
     url = request.args.get("url")
@@ -37,7 +38,7 @@ def getManga():
     return response(data)
 
 
-@asurascans.route("/asura/chapter", methods=["GET"])
+@asurascans.route("//chapter", methods=["GET"])
 @cache.cached(timeout=50)
 def getChapter():
     url = request.args.get("url")
