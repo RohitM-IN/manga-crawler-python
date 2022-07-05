@@ -1,4 +1,5 @@
 beautifulsoup4==4.11.1
+Brotli==1.0.9
 cachelib==0.9.0
 certifi==2022.6.15
 charset-normalizer==2.1.0
