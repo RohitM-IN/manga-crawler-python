@@ -4,11 +4,12 @@ from werkzeug.exceptions import BadRequest
 from utils.cache import cache, getCache
 from utils.utils import response, make_error
 import os
+from config import CACHE_TIME
 
 reaperscans = Blueprint(name="Reaper", import_name=__name__)
 
 @reaperscans.route("/", methods=["GET"])
-@cache.cached(timeout=int(os.getenv('CACHE_TIME')))
+@cache.cached(timeout=CACHE_TIME)
 def getList():
     data = []
     count = 0
@@ -39,7 +40,6 @@ def getManga():
 
 
 @reaperscans.route("/chapter", methods=["GET"])
-@cache.cached(timeout=int(os.getenv('CACHE_TIME')))
 def getChapter():
     url = request.args.get('url')
     if url == None:

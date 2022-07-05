@@ -3,12 +3,13 @@ from utils.cleaner import asura
 from werkzeug.exceptions import BadRequest
 from utils.cache import cache, getCache
 from utils.utils import response, make_error
+from config import CACHE_TIME
 import os
 
 asurascans = Blueprint(name="asurascans", import_name=__name__)
 
 @asurascans.route("/", methods=["GET"])
-@cache.cached(timeout=int(os.getenv('CACHE_TIME')))
+@cache.cached(timeout=CACHE_TIME)
 def getList():
     data = []
     count = 1
@@ -25,7 +26,7 @@ def getList():
             cache.clear()
     return response(data)
 
-@asurascans.route("//manga", methods=["GET"])
+@asurascans.route("/manga", methods=["GET"])
 def getManga():
     url = request.args.get("url")
     if url == None:

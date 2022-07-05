@@ -3,10 +3,11 @@ from utils.utils import response
 from werkzeug import exceptions
 from utils.cache import cache
 import sys
+from config import CACHE_TIME
 
 config = {
     "CACHE_TYPE": "SimpleCache",  # Flask-Caching related configs
-    "CACHE_DEFAULT_TIMEOUT": 600
+    "CACHE_DEFAULT_TIMEOUT": CACHE_TIME
 }
 
 app = Flask(__name__)
