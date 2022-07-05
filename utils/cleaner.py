@@ -5,9 +5,20 @@ try:
 except ImportError:
     from bs4 import BeautifulSoup
 
-def response(data,status=200):
+def response(data,status=200,message="success"):
 
-    return jsonify({'status': status , 'data' : data})
+    return jsonify({'status': status , 'data' : data, 'message' : message})
+
+def make_error(status_code, message, error):
+    response = jsonify({
+        'status': status_code,
+        'error': {
+            'message': message,
+            'type': error
+        }
+    })
+    response.status_code = status_code
+    return response
 
 class asura:
     def __init__(self, url):
@@ -40,7 +51,6 @@ class asura:
         return data
 
     def getManga(self):
-        url = self.url
         el = self.parsed_html.find('div',{'class': 'postbody'})
 
         chapters =  el.select('#chapterlist > ul > li')
@@ -74,3 +84,13 @@ class asura:
         }
 
         return manga
+    
+    def getChapter(self):
+        el = self.parsed_html.find('div',{'id': 'readerarea'})
+
+        image = []
+
+        for element in el.find_all('img')[1:-1]:
+            image.append(element['src'])
+
+        return image
