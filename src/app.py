@@ -4,6 +4,10 @@ from werkzeug import exceptions
 from utils.cache import cache
 import sys
 from config import CACHE_TIME
+from flask_apscheduler import APScheduler
+from proxy.proxy import getProxy
+
+
 
 config = {
     "CACHE_TYPE": "SimpleCache",  # Flask-Caching related configs
@@ -14,6 +18,10 @@ app = Flask(__name__)
 app.config['TRAP_BAD_REQUEST_ERRORS'] = True
 app.config.from_mapping(config)
 cache.init_app(app)
+scheduler = APScheduler()
+scheduler.init_app(app)
+scheduler.add_job(id = 'Scheduled Task', func=getProxy, trigger="interval", seconds=60)
+scheduler.start()
 
 
 from src.blueprints.asurascans import asurascans

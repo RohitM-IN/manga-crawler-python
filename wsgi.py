@@ -3,6 +3,9 @@
 ####################
 from src.app import app
 
+
+# getProxy()
+
 if __name__ == "__main__":
     ####################
     # FOR DEVELOPMENT
