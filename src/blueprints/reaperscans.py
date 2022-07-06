@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request, abort
-from utils.cleaner import reaper
+from utils.cleaners.reaper import reaper
 from werkzeug.exceptions import BadRequest
 from utils.cache import cache, getCache
 from utils.utils import response, make_error

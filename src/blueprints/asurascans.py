@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request, abort
-from utils.cleaner import asura
+from utils.cleaners.asura import asura
 from werkzeug.exceptions import BadRequest
 from utils.cache import cache, getCache
 from utils.utils import response, make_error
