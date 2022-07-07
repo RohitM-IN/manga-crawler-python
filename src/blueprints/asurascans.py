@@ -5,6 +5,7 @@ from utils.cache import cache, getCache
 from utils.utils import response, make_error
 from config import CACHE_TIME
 import os
+import numpy as np
 
 asurascans = Blueprint(name="asurascans", import_name=__name__)
 
@@ -16,7 +17,6 @@ def getList():
     while True:
         url = "https://www.asurascans.com/manga/?status=&type=&order=title&page=" + str(count)
         items = asura(url).getList()
-
         if len(items) == 0:
             break
         else:
@@ -24,7 +24,9 @@ def getList():
         count = count + 1 
         if data == None:
             cache.clear()
-    return response(data)
+    items = list(np.concatenate(data).flat)
+
+    return response(items)
 
 @asurascans.route("/manga", methods=["GET"])
 def getManga():

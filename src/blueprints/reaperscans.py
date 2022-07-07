@@ -5,6 +5,7 @@ from utils.cache import cache, getCache
 from utils.utils import response, make_error
 import os
 from config import CACHE_TIME
+import numpy as np
 
 reaperscans = Blueprint(name="Reaper", import_name=__name__)
 
@@ -24,7 +25,8 @@ def getList():
         count = count + 1 
         if data == None:
             cache.clear()
-    return response(data)
+    items = list(np.concatenate(data).flat)
+    return response(items)
 
 @reaperscans.route("/manga", methods=["GET"])
 def getManga():

@@ -31,8 +31,9 @@ from src.blueprints.errors import errors
 app.register_blueprint(errors)
 app.register_blueprint(asurascans, url_prefix='/api/v1/asura')
 app.register_blueprint(reaperscans, url_prefix='/api/v1/reaper')
+# TODO: make dragontea.ink blueprint
 
 
 @app.route('/')
 def index():
-    return response("Hello, World!")
+    return response("Pong")

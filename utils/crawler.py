@@ -1,5 +1,4 @@
 import cloudscraper
-from fp.fp import FreeProxy
 import random
 
 scraper = cloudscraper.create_scraper(interpreter='nodejs',delay=10,browser={
@@ -26,8 +25,8 @@ class crawler:
         except:
             return None
 
-    def post(self,data):
-        return scraper.post(self.url,data=data,headers=self.headers ,proxies=self.getProxy()).content
+    def post(self,data,headers):
+        return scraper.post(self.url,data=data,headers=headers or self.headers ,proxies=self.getProxy()).content
 
 
 
