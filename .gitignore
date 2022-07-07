@@ -1,5 +1,0 @@
-venv
-**/__pycache__/
-docker-compose.yml
-proxy.bat
-checked.txt
