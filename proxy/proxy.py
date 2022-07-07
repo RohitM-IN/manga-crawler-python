@@ -1,8 +1,6 @@
 import requests
 import time
 import sys
-from joblib import Parallel, delayed
-
 
 def getProxy():
     f  = open('checked.txt', 'w')
@@ -13,7 +11,8 @@ def getProxy():
         try:
             proxies = requests.get("https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=1700&country=all&ssl=all&anonymity=all&simplified=true").text.splitlines( )
             print("Proxy got:",len(proxies))
-            Parallel(n_jobs=10)(delayed(test)(proxy) for proxy in proxies)
+            for proxy in proxies:
+                test(proxy)
             print("Proxy Working:",sum(1 for line in open('checked.txt')))
             retry += 1
         except:
@@ -22,15 +21,12 @@ def getProxy():
 def test(proxy):
     try:
         proxies = {'http': proxy}
-        # r = requests.get('https://api.ipify.org?format=json', proxies=proxies, timeout=5)
-        r = requests.get('https://www.google.com', proxies=proxies, timeout=5)
-        if r.status_code == 200:
+        g = requests.get('https://www.google.com', proxies=proxies, timeout=5)
+        if g.status_code == 200:
             f = open('checked.txt', 'a')
             f.write(proxy + "\n")
             f.close()
             count = count + 1
-        #     return True
-        # else:
-        #     return False
+
     except:
         return False
