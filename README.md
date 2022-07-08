@@ -15,11 +15,13 @@ You can use this as a server to scrape Manga and use the API to implement it in 
 
 ## Supported Manga Website
 
-* [X] Asura Scans
-* [X] Reaper Scans
-* [X] Flamescans.org
-* [ ] Dragontea.ink
-* [ ] Realmscans.com
+* [X] [Asura Scans](https://asurascans.com/)
+* [X] [Reaper Scans](https://reaperscans.com/)
+* [X] [Flame Scans](https://flamescans.org/)
+* [X] [Dragon Tea](https://dragontea.ink)
+* [ ] [Realm Scans](https://realmscans.com)
+* [ ] [Leviatan Scans](https://leviatanscans.com/hym/)
+* [ ] [Mangadex](https://mangadex.org)
 * [ ] Isekai Scans
 * [ ] MCReader
 * [ ] FanFox

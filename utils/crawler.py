@@ -29,7 +29,10 @@ class crawler:
             return None
 
     def post(self,data,headers):
+        # try:
         return scraper.post(self.url,data=data,headers=headers or self.headers ,proxies=self.getProxy()).content
+        # except:
+        #     return None
 
 
 

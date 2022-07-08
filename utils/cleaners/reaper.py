@@ -1,4 +1,5 @@
 from utils.crawler import crawler
+from utils.cleaners.madara import madara as md
 from flask import jsonify
 try: 
     from BeautifulSoup import BeautifulSoup
@@ -12,58 +13,19 @@ class reaper:
 
     def getList(self,count,perPage):
         data = []
-
         html = crawler(self.url).post(self.getContent(count,perPage),self.getHeader())
         parsed_html = BeautifulSoup(html,'html.parser')
-
-        # print(parsed_html.prettify())
-
-        elements = parsed_html.find_all('div',{"class" : 'manga'})
-
-        for items in elements:
-
-            title = items.find('div',{'class':'post-title'}).get_text(strip=True)
-            image = items.find('img').get('data-src')
-            url = items.find('div',{'class':'post-title'}).find('a').get('href')
-            rating = items.find('span',{'class': 'score'}).get_text(strip=True)
-            chapters = items.find_all('div',{'class': 'chapter-item'})
-
-            chapter = []
-
-            for item in chapters:
-                ch = {
-                    'title': item.find('span',{'class':'chapter'}).get_text(strip=True),
-                    'url': item.find('a').get('href'),
-                    'date': item.find('span',{'class': 'post-on'}).get_text(strip=True)
-                }
-                chapter.append(ch)
-
-            manga = {
-                'title': title,
-                'image': image,
-                'chapter': chapter,
-                'rating': rating,
-                'url': url
-            }
-
-            data.append(manga)
-
+        data = md(parsed_html).getList()
         return data
 
     def getManga(self):
-
         html = crawler(self.url).get()
-
         parsed_html = BeautifulSoup(html,'html.parser')
 
         chapters =  parsed_html.find('div',{'class': 'c-page-content'}).find_all('li')
-
         details = parsed_html.find('div',{'class': 'profile-manga'})
 
-        # print(el.find('div',{'class': 'infox'}).prettify())
-
         chapter = []
-
         for element in chapters:
             ch = {
                 'title': element.find('p').get_text(strip=True),
@@ -74,7 +36,6 @@ class reaper:
             chapter.append(ch)
         
         genre = []
-
         for element in details.find('div',{'class': 'genres-content'}).find_all('a'):
             genre.append(element.get_text(strip=True))
         
@@ -95,19 +56,10 @@ class reaper:
         return manga
 
     def getChapter(self):
-
         html = crawler(self.url).get()
-
         parsed_html = BeautifulSoup(html,'html.parser')
-
-        el = parsed_html.find('div',{'class': 'reading-content'})
-
-        image = []
-
-        for element in el.find_all('img'):
-            image.append(element.get('data-src').strip())
-
-        return image
+        data = md(parsed_html).getChapter()
+        return data
 
     def getContent(self,page,perPage):
         return "action=madara_load_more&page={0}&template=madara-core%2Fcontent%2Fcontent-archive&vars%5Borderby%5D=meta_value_num&vars%5Bpaged%5D=1&vars%5Btimerange%5D=&vars%5Bposts_per_page%5D={1}&vars%5Btax_query%5D%5Brelation%5D=OR&vars%5Bmeta_query%5D%5B0%5D%5B0%5D%5Bkey%5D=_wp_manga_chapter_type&vars%5Bmeta_query%5D%5B0%5D%5B0%5D%5Bvalue%5D=manga&vars%5Bmeta_query%5D%5B0%5D%5Brelation%5D=AND&vars%5Bmeta_query%5D%5Brelation%5D=OR&vars%5Bpost_type%5D=wp-manga&vars%5Bpost_status%5D=publish&vars%5Bmeta_key%5D=_latest_update&vars%5Border%5D=desc&vars%5Bsidebar%5D=full&vars%5Bmanga_archives_item_layout%5D=big_thumbnail".format(page,perPage)
