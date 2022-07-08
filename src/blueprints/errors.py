@@ -6,11 +6,10 @@ errors = Blueprint('errors', __name__)
 def handle_error(error):
     message = [str(x) for x in error.args] or error.description
     # print("message",message)
-    # print("error",error.name)
     response = {
-        'status': error.code,
+        'status':  error.code if hasattr(error,'code') else 400,
         'error': {
-            'type': error.name or error.__class__.__name__,
+            'type': error.name or error.__class__.__name__ or "",
             'message': message
         }
     }

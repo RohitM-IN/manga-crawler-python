@@ -14,7 +14,10 @@ class crawler:
         self.headers = headers
 
     def get(self):
-        return scraper.get(self.url,headers=self.headers ,proxies=self.getProxy()).content
+        try:
+            return scraper.get(self.url,proxies=self.getProxy()).content
+        except:
+            return None
 
     def getProxy(self):
         try:

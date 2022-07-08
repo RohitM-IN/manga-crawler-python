@@ -17,9 +17,9 @@ You can use this as a server to scrape Manga and use the API to implement it in 
 
 * [X] Asura Scans
 * [X] Reaper Scans
-* [ ] Flamescans.org
+* [X] Flamescans.org
 * [ ] Dragontea.ink
-* [ ] Realmscans
+* [ ] Realmscans.com
 * [ ] Isekai Scans
 * [ ] MCReader
 * [ ] FanFox

@@ -1,8 +1,8 @@
-from flask import jsonify
+from flask import jsonify, Response
 
 def response(data,status=200,message="success"):
 
-    return jsonify({'status': status , 'data' : data, 'message' : message})
+    return jsonify({'status': status , 'data' : data, 'message' : message}), status
 
 def make_error(status_code, message, error):
     response = jsonify({
@@ -12,5 +12,5 @@ def make_error(status_code, message, error):
             'type': error
         }
     })
-    response.status_code = status_code
-    return response
+    response.code = status_code
+    return response, status_code

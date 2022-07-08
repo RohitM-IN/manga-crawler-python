@@ -1,1 +1,7 @@
+FRESH_PROXY_REFESH_INTERVAL = 60
 CACHE_TIME = 600
+
+CONFIG = {
+    "CACHE_TYPE": "SimpleCache",  # Flask-Caching related configs
+    "CACHE_DEFAULT_TIMEOUT": CACHE_TIME
+}

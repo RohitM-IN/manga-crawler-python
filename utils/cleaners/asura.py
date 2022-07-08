@@ -10,6 +10,12 @@ class asura:
         self.url = url
         self.html = crawler(self.url).get()
         self.parsed_html = BeautifulSoup(self.html,'html.parser')
+        self.check404 = self.check404()
+    
+    def check404(self):
+        if "Page not found" in self.parsed_html.title.get_text():
+            return True
+        return False
 
     def getList(self):
         data = []
@@ -36,6 +42,8 @@ class asura:
         return data
 
     def getManga(self):
+        if self.check404 == True:
+            return False
         el = self.parsed_html.find('div',{'class': 'postbody'})
 
         chapters =  el.select('#chapterlist > ul > li')
@@ -71,6 +79,8 @@ class asura:
         return manga
     
     def getChapter(self):
+        if self.check404 == True:
+            return False
         el = self.parsed_html.find('div',{'id': 'readerarea'})
 
         image = []
