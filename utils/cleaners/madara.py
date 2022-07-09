@@ -1,4 +1,5 @@
 from utils.crawler import crawler
+from utils.utils import chapterFixer
 from flask import jsonify
 try: 
     from BeautifulSoup import BeautifulSoup
@@ -25,7 +26,7 @@ class madara:
 
             for item in chapters:
                 ch = {
-                    'title': item.find('span',{'class':'chapter'}).get_text(strip=True),
+                    'title': chapterFixer(item.find('span',{'class':'chapter'}).get_text(strip=True)),
                     'url': item.find('a').get('href'),
                     'date': item.find('span',{'class': 'post-on'}).get_text(strip=True)
                 }
@@ -43,8 +44,8 @@ class madara:
 
         return data
     
-    def getChapter(self):
-        el = self.parsed_html.find('div',{'class': 'reading-content'})
+    def getChapter(self,chapterClass = 'reading-content'):
+        el = self.parsed_html.find('div',{'class': chapterClass})
 
         image = []
 
@@ -52,3 +53,24 @@ class madara:
             image.append(element.get('data-src').strip())
 
         return image
+    
+    def getChapterDetails(self,chaptersClass = 'listing-chapters_wrap',chaptersTag = 'div'):
+        chapter = []
+        chapters =  self.parsed_html.find(chaptersTag,{'class': chaptersClass})
+
+        for element in chapters.find_all('li'):
+            ch = {
+                'title': chapterFixer(element.find('p').get_text(strip=True)),
+                'url': element.find('a').get('href'),
+                'date': element.find('span').get_text(strip=True)
+            }
+            chapter.append(ch)
+        
+        return chapter
+    
+    def getDetails(self,detailsClass = 'genres-content',detailsTag = 'div'):
+        details = []
+        for element in self.parsed_html.find(detailsTag,{'class': detailsClass}).find_all('a'):
+            details.append(element.get_text(strip=True))
+        return details
+

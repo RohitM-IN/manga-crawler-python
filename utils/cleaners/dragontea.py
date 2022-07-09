@@ -1,5 +1,6 @@
 from utils.crawler import crawler
 from utils.cleaners.madara import madara as md
+from utils.utils import chapterFixer
 from flask import jsonify
 try: 
     from BeautifulSoup import BeautifulSoup
@@ -32,9 +33,8 @@ class dragontea:
 
         for element in chapters:
             ch = {
-                'title': element.find('a').get_text(strip=True),
+                'title': chapterFixer(element.find('a').get_text(strip=True)),
                 'url': element.find('a').get('href'),
-                'index': element.find('a').get_text(strip=True).split('-')[0].split(' ')[1],
                 'date': element.find('span').get_text(strip=True)
             }
             chapter.append(ch)
@@ -50,12 +50,13 @@ class dragontea:
                 author.append(element.get_text(strip=True))
         
         Manga_Type = "" 
+        for el in details.find('div',{'class': 'post-content'}).find_all('div',{'class':'post-content_item'}):
+            if el.find('div',{'class':'summary-heading'}).get_text(strip=True) == 'Type':
+                Manga_Type = el.find('div',{'class':'summary-content'}).get_text(strip=True)
+
         status = ""
         if details.find('div',{'class': 'post-status'}):
             for el in details.find('div',{'class': 'post-status'}).find_all('div',{'class': 'post-content_item'}):
-                if el.find('div',{'class':'summary-heading'}).get_text(strip=True) == 'Type':
-                    Manga_Type = el.find('div',{'class':'summary-content'}).get_text(strip=True)
-                    print(Manga_Type)
                 if el.find('div',{'class':'summary-heading'}).get_text(strip=True) == 'Status':
                     status = el.find('div',{'class':'summary-content'}).get_text(strip=True)
         

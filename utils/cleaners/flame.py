@@ -1,4 +1,5 @@
 from utils.crawler import crawler
+from utils.utils import chapterFixer
 from flask import jsonify
 try: 
     from BeautifulSoup import BeautifulSoup
@@ -45,7 +46,7 @@ class flame:
         chapter = []
         for element in chapters:
             ch = {
-                'title': element.find('span',{'class': 'chapternum'}).get_text(strip=True).replace('\n', ' '),
+                'title': chapterFixer(element.find('span',{'class': 'chapternum'}).get_text(strip=True).replace('\n', ' ')),
                 'url': element.find('a').get('href'),
                 'date': element.find('span',{'class': 'chapterdate'}).get_text(strip=True)
             }

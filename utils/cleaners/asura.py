@@ -1,4 +1,5 @@
 from utils.crawler import crawler
+from utils.utils import chapterFixer
 from flask import jsonify
 try: 
     from BeautifulSoup import BeautifulSoup
@@ -44,19 +45,18 @@ class asura:
     def getManga(self):
         if self.check404 == True:
             return False
+        
         el = self.parsed_html.find('div',{'class': 'postbody'})
 
         chapters =  el.select('#chapterlist > ul > li')
 
         details = el.find('div',{'class': 'infox'})
 
-        # print(el.find('div',{'class': 'infox'}).prettify())
-
         chapter = []
 
         for element in chapters:
             ch = {
-                'title': element.find('span',{'class': 'chapternum'}).get_text(strip=True),
+                'title': chapterFixer(element.find('span',{'class': 'chapternum'}).get_text(strip=True)),
                 'url': element.find('a').get('href'),
                 'date': element.find('span',{'class': 'chapterdate'}).get_text(strip=True)
             }
@@ -81,6 +81,7 @@ class asura:
     def getChapter(self):
         if self.check404 == True:
             return False
+
         el = self.parsed_html.find('div',{'id': 'readerarea'})
 
         image = []

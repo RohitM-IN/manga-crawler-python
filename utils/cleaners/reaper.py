@@ -1,5 +1,6 @@
 from utils.crawler import crawler
 from utils.cleaners.madara import madara as md
+from utils.utils import chapterFixer
 from flask import jsonify
 try: 
     from BeautifulSoup import BeautifulSoup
@@ -15,6 +16,7 @@ class reaper:
         data = []
         html = crawler(self.url).post(self.getContent(count,perPage),self.getHeader())
         parsed_html = BeautifulSoup(html,'html.parser')
+
         data = md(parsed_html).getList()
         return data
 
@@ -22,26 +24,15 @@ class reaper:
         html = crawler(self.url).get()
         parsed_html = BeautifulSoup(html,'html.parser')
 
-        chapters =  parsed_html.find('div',{'class': 'c-page-content'}).find_all('li')
         details = parsed_html.find('div',{'class': 'profile-manga'})
 
-        chapter = []
-        for element in chapters:
-            ch = {
-                'title': element.find('p').get_text(strip=True),
-                'url': element.find('a').get('href'),
-                'index': element.find('p').get_text(strip=True).split('-')[0].split(' ')[1],
-                'date': element.find('span').get_text(strip=True)
-            }
-            chapter.append(ch)
+        madara = md(parsed_html)
+
+        chapter = madara.getChapterDetails('c-page-content')
         
-        genre = []
-        for element in details.find('div',{'class': 'genres-content'}).find_all('a'):
-            genre.append(element.get_text(strip=True))
+        genre = madara.getDetails('genres-content','div')
         
-        author = []
-        for element in details.find('div',{'class': 'author-content'}).find_all('a'):
-            author.append(element.get_text(strip=True))
+        author = madara.getDetails('author-content','div')
         
         manga = {
             'title': details.find('div',{'class':'post-title'}).find('h1').get_text(strip=True),
@@ -58,6 +49,7 @@ class reaper:
     def getChapter(self):
         html = crawler(self.url).get()
         parsed_html = BeautifulSoup(html,'html.parser')
+
         data = md(parsed_html).getChapter()
         return data
 
