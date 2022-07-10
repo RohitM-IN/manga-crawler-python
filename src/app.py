@@ -20,6 +20,7 @@ from src.blueprints.asurascans import asurascans
 from src.blueprints.reaperscans import reaperscans
 from src.blueprints.flamescans import flamescans
 from src.blueprints.dragontea import dragontea
+from src.blueprints.realmscans import realmscans
 # from src.blueprints.errors import errors
 
 # app.register_blueprint(errors)
@@ -27,6 +28,7 @@ app.register_blueprint(asurascans, url_prefix='/api/v1/asura')
 app.register_blueprint(reaperscans, url_prefix='/api/v1/reaper')
 app.register_blueprint(flamescans, url_prefix='/api/v1/flame')
 app.register_blueprint(dragontea, url_prefix='/api/v1/dragontea')
+app.register_blueprint(realmscans, url_prefix='/api/v1/realm')
 # TODO: make dragontea.ink blueprint
 
 

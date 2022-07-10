@@ -13,7 +13,7 @@ def getList():
     data = []
     count = 1
     while True:
-        url = "https://www.asurascans.com/manga/?status=&type=&order=title&page=" + str(count)
+        url = "https://www.asurascans.com/manga/?status=&type=&order=update&page=" + str(count)
         items = asura(url).getList()
         if len(items) == 0:
             break

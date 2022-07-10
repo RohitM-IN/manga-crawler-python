@@ -1,10 +1,6 @@
 from utils.crawler import crawler
 from utils.utils import chapterFixer
-from flask import jsonify
-try: 
-    from BeautifulSoup import BeautifulSoup
-except ImportError:
-    from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup
 
 class flame:
     def __init__(self, url):

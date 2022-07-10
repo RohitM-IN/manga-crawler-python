@@ -20,6 +20,7 @@ You can use this as a server to scrape Manga and use the API to implement it in 
 * [X] [Flame Scans](https://flamescans.org/)
 * [X] [Dragon Tea](https://dragontea.ink)
 * [ ] [Realm Scans](https://realmscans.com)
+* [ ] [Alpha Scans](https://alpha-scans.org)
 * [ ] [Leviatan Scans](https://leviatanscans.com/hym/)
 * [ ] [Mangadex](https://mangadex.org)
 * [ ] Isekai Scans

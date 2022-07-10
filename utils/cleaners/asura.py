@@ -1,10 +1,7 @@
+import re
 from utils.crawler import crawler
-from utils.utils import chapterFixer
-from flask import jsonify
-try: 
-    from BeautifulSoup import BeautifulSoup
-except ImportError:
-    from bs4 import BeautifulSoup
+from utils.cleaners.common.mangastream import mangastream
+from bs4 import BeautifulSoup
 
 class asura:
     def __init__(self, url):
@@ -19,26 +16,7 @@ class asura:
         return False
 
     def getList(self):
-        data = []
-
-        elements = self.parsed_html.find_all('div',{"class" : 'bs'})
-
-        for el in elements:
-            title = el.find('div',{'class': 'tt'}).get_text(strip=True)
-            image = el.find('img').get('src')
-            url = el.find('a').get('href')
-            chapter = el.find('div',{'class': 'epxs'}).get_text(strip=True)
-            rating = el.find('div',{'class': 'numscore'}).get_text(strip=True)
-
-            manga = {
-                'title': title,
-                'image': image,
-                'chapter': chapter,
-                'rating': rating,
-                'url': url
-            }
-
-            data.append(manga)
+        data = mangastream(self.parsed_html).getList()
 
         return data
 
@@ -46,34 +24,36 @@ class asura:
         if self.check404 == True:
             return False
         
-        el = self.parsed_html.find('div',{'class': 'postbody'})
+        ms = mangastream(self.parsed_html)
 
-        chapters =  el.select('#chapterlist > ul > li')
+        chapters = self.parsed_html.find('div',{'class': 'eplister'}).find_all('li')
 
-        details = el.find('div',{'class': 'infox'})
+        details = self.parsed_html.find('div',{'class': 'thumbook'})
+        details_2 = self.parsed_html.find('div',{'class': 'infox'})
 
-        chapter = []
-
-        for element in chapters:
-            ch = {
-                'title': chapterFixer(element.find('span',{'class': 'chapternum'}).get_text(strip=True)),
-                'url': element.find('a').get('href'),
-                'date': element.find('span',{'class': 'chapterdate'}).get_text(strip=True)
-            }
-            chapter.append(ch)
-        
-        genre = []
-
-        for element in el.find('span',{'class': 'mgen'}).find_all('a'):
-            genre.append(element.get_text(strip=True))
+        author = artist = rating = status = Mtype = "-"
+        if details_2.find('b',text=re.compile("Author")):
+            author = details_2.find('b',text=re.compile("Author")).parent.find('span').get_text(strip=True)
+        if details_2.find('b',text=re.compile("Artist")):
+            artist = details_2.find('b',text=re.compile("Artist")).parent.find('span').get_text(strip=True)
+        if details.find('div',{'class': 'rating'}):
+            rating = details.find('div',{'class': 'rating'}).find('div',{'class': 'num'}).get_text(strip=True)
+        if details.find(text=re.compile("Status")):
+            status = details.find(text=re.compile("Status")).next_sibling.get_text(strip=True)
+        if details.find(text=re.compile("Type")):
+            Mtype = details.find(text=re.compile("Type")).next_sibling.get_text(strip=True)
 
         manga = {
-            'title': details.select_one('h1.entry-title').get_text(strip=True),
-            'image': el.find('img').get('src'),
-            'description': el.find('div',{'class': 'entry-content'}).get_text(strip=True),
-            'genre': genre,
-            'type': el.find('div',{'class': 'tsinfo'}).select_one('div.imptdt:nth-of-type(2) > a').get_text(strip=True),
-            'chapter': chapter,
+            'title': ms.getMangaDetails(('h1',{'class': 'entry-title'}),"infox").get_text(strip=True),
+            'image': ms.getMangaDetails(('div',{'class': 'thumb'}),"thumbook").find('img').get('src'),
+            'description': ms.getMangaDetails(('div',{'class': 'entry-content'}),"infox").get_text(strip=True),
+            'genre': ms.getMangaGenreDetails(('span',{'class': 'mgen'})),
+            'type': Mtype,
+            'status': status,
+            'author': author,
+            'artist': artist,
+            'rating': rating,
+            'chapter': ms.getMangaChapterDetails(chapters),
         }
 
         return manga
@@ -81,12 +61,6 @@ class asura:
     def getChapter(self):
         if self.check404 == True:
             return False
-
-        el = self.parsed_html.find('div',{'id': 'readerarea'})
-
-        image = []
-
-        for element in el.find_all('img')[1:-1]:
-            image.append(element.get('src'))
+        image = mangastream(self.parsed_html).getChapter() 
 
         return image

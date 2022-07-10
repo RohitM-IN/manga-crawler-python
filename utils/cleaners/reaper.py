@@ -1,11 +1,6 @@
 from utils.crawler import crawler
-from utils.cleaners.madara import madara as md
-from utils.utils import chapterFixer
-from flask import jsonify
-try: 
-    from BeautifulSoup import BeautifulSoup
-except ImportError:
-    from bs4 import BeautifulSoup
+from utils.cleaners.common.madara import madara
+from bs4 import BeautifulSoup
 
 
 class reaper:
@@ -17,7 +12,7 @@ class reaper:
         html = crawler(self.url).post(self.getContent(count,perPage),self.getHeader())
         parsed_html = BeautifulSoup(html,'html.parser')
 
-        data = md(parsed_html).getList()
+        data = madara(parsed_html).getList()
         return data
 
     def getManga(self):
@@ -26,13 +21,13 @@ class reaper:
 
         details = parsed_html.find('div',{'class': 'profile-manga'})
 
-        madara = md(parsed_html)
+        md = madara(parsed_html)
 
-        chapter = madara.getChapterDetails('c-page-content')
+        chapter = md.getChapterDetails('c-page-content')
         
-        genre = madara.getDetails('genres-content','div')
+        genre = md.getDetails('genres-content','div')
         
-        author = madara.getDetails('author-content','div')
+        author = md.getDetails('author-content','div')
         
         manga = {
             'title': details.find('div',{'class':'post-title'}).find('h1').get_text(strip=True),
@@ -50,7 +45,7 @@ class reaper:
         html = crawler(self.url).get()
         parsed_html = BeautifulSoup(html,'html.parser')
 
-        data = md(parsed_html).getChapter()
+        data = madara(parsed_html).getChapter()
         return data
 
     def getContent(self,page,perPage):

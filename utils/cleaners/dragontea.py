@@ -1,11 +1,7 @@
 from utils.crawler import crawler
-from utils.cleaners.madara import madara as md
+from utils.cleaners.common.madara import madara
 from utils.utils import chapterFixer
-from flask import jsonify
-try: 
-    from BeautifulSoup import BeautifulSoup
-except ImportError:
-    from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup
 
 class dragontea:
     def __init__(self, url):
@@ -15,11 +11,12 @@ class dragontea:
         html = crawler(self.url).post(self.getContent(count,perPage),self.getHeader())
         parsed_html = BeautifulSoup(html,'html.parser')
 
-        data = md(parsed_html).getList()
+        data = madara(parsed_html).getList()
 
         return data
 
     def getManga(self):
+        #TODO: Fix and make some common function for this in madara
         html = crawler(self.url).get()
         parsed_html = BeautifulSoup(html,'html.parser')
 
@@ -77,7 +74,7 @@ class dragontea:
         html = crawler(self.url).get()
         parsed_html = BeautifulSoup(html,'html.parser')
 
-        data = md(parsed_html).getChapter()
+        data = madara(parsed_html).getChapter()
 
         return data
     
