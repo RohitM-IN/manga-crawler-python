@@ -1,3 +1,4 @@
+from utils.cleaners.common.mangastream import mangastream
 from utils.crawler import crawler
 from utils.utils import chapterFixer
 from bs4 import BeautifulSoup
@@ -15,48 +16,26 @@ class flame:
         return False
     
     def getList(self):
-        data = []
-        elements = self.parsed_html.find('div',{"class" : 'listupd'}).find_all('div',{'class': 'bs'})
-        for items in elements:
-            title = items.find('div',{'class':'tt'}).get_text(strip=True)
-            image = items.find('img').get('src')
-            url = items.find('a').get('href')
-            rating = items.find('div',{'class': 'numscore'}).get_text(strip=True)
-            status = items.find('div',{'class': 'status'}).get_text(strip=True)
-            manga = {
-                'title': title,
-                'image': image,
-                'status': status,
-                'rating': rating,
-                'url': url
-            }
-            data.append(manga)
+        data = mangastream(self.parsed_html.find('div',{"class" : 'listupd'})).getList()
         return data
     
     def getManga(self):
-        print(self.notFound)
+        def filterList(i):
+            if i == '\n' or i == '\xa0' or i.strip() == '':
+                return False
+            return True
         if self.notFound == True:
             return False
+
         details = self.parsed_html.find('div',{'class': 'first-half'})
         chapters =  self.parsed_html.find('div',{'class':'second-half'}).find('div',{'class': 'eplister'}).find_all('li')
-        chapter = []
-        for element in chapters:
-            ch = {
-                'title': chapterFixer(element.find('span',{'class': 'chapternum'}).get_text(strip=True).replace('\n', ' ')),
-                'url': element.find('a').get('href'),
-                'date': element.find('span',{'class': 'chapterdate'}).get_text(strip=True)
-            }
-            chapter.append(ch)
-        
 
-        genre = []
-        for element in details.find('span',{'class': 'mgen'}).find_all('a'):
-            genre.append(element.get_text(strip=True))
-        
+        md = mangastream(self.parsed_html)
+        chapter = md.getMangaChapterDetails(chapters)
+        genre = md.getMangaGenreDetails()
         extra = self.parsed_html.find('div',{'class': 'tsinfo'}).find_all('div',{'class':'imptdt'})
 
         info = []
-
         for element in extra:
             if element.find('h1') is None:
                 continue
@@ -66,17 +45,14 @@ class flame:
              key : value
             }
             info.append(el)
-        def filterList(i):
-            if i == '\n' or i == '\xa0' or i.strip() == '':
-                return False
-            return True
-
+    
         about = list(filter(filterList,details.find('div',{'class': 'entry-content'}).find_all(text=True))) 
         original = None
         if about[-3] == "Additional Information":
             original = details.find('div',{'class': 'entry-content'}).find('u').find('a').get('href')
             about = about[:-3]
         about = ' \n'.join(about)
+        
         manga = {
             'title': details.find('div',{'class':'titles'}).get_text(strip=True),
             'alt-title' : list(details.find('div',{'class':'desktop-titles'}).get_text(strip=True).split('|')),
@@ -94,11 +70,6 @@ class flame:
     def getChapter(self):
         if self.check404 == True:
             return False
-        el = self.parsed_html.find('div',{'id': 'readerarea'})
-
-        image = []
-
-        for element in el.find_all('img'):
-            image.append(element.get('src'))
-
+        images = self.parsed_html.find("div",{'id': 'readerarea'}).find_all('img')
+        image = mangastream(None).getChapter(images) 
         return image

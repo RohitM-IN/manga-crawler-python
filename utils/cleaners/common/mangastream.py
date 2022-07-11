@@ -1,4 +1,4 @@
-from utils.utils import chapterFixer
+from utils.utils import chapterFixer, fixUrl
 
 class mangastream:
     def __init__(self, parsed_html):
@@ -14,8 +14,20 @@ class mangastream:
             title = el.find('div',{'class': 'tt'}).get_text(strip=True)
             image = el.find('img').get('src')
             url = el.find('a').get('href')
-            chapter = el.find('div',{'class': 'epxs'}).get_text(strip=True)
-            rating = el.find('div',{'class': 'numscore'}).get_text(strip=True)
+            chapter = el.find('div',{'class': 'epxs'}).get_text(strip=True) if el.find('div',{'class': 'epxs'}) else None
+            rating = el.find('div',{'class': 'numscore'}).get_text(strip=True) if el.find('div',{'class': 'numscore'}) else None
+            status = el.find('div',{'class': 'status'}).get_text(strip=True) if el.find('div',{'class': 'status'}) else None
+            
+            manga = {
+                'title': title,
+                'image': fixUrl(str(image)),
+                'status': status,
+                'rating': rating,
+                'url': fixUrl(str(url)),
+                'chapter': chapter,
+                'status': status
+            }
+            data.append(manga)
 
             manga = {
                 'title': title,
@@ -51,13 +63,11 @@ class mangastream:
             genre.append(element.get_text(strip=True))
         return genre
     
-    def getChapter(self,ChapterDiv = ('div',{'id': 'readerarea'})):
-        images = self.parsed_html.find(ChapterDiv).find_all('img')
+    def getChapter(self,images):
         image = []
 
         for element in images:
             if element.get('style') and "display: none" in element.get('style'):
                 continue
             image.append(element.get('src'))
-
         return image

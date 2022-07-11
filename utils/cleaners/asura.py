@@ -61,6 +61,7 @@ class asura:
     def getChapter(self):
         if self.check404 == True:
             return False
-        image = mangastream(self.parsed_html).getChapter() 
+        images = self.parsed_html.find("div",{'id': 'readerarea'}).find_all('img')
+        image = mangastream(None).getChapter(images) 
 
         return image

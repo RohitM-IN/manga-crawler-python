@@ -7,7 +7,8 @@ scraper = cloudscraper.create_scraper(interpreter='nodejs',delay=10,browser={
         'desktop': False
     })
 
-
+cookie = scraper.get_cookie_string('https://dragontea.ink/')
+print(cookie)
 class crawler:
     def __init__(self, url,headers=None):
         self.url = url
@@ -30,7 +31,8 @@ class crawler:
 
     def post(self,data,headers):
         # try:
-        return scraper.post(self.url,data=data,headers=headers or self.headers ,proxies=self.getProxy()).content
+        print(token)
+        return scraper.post(self.url,cookies=token,data=data,headers=headers or self.headers ,proxies=self.getProxy()).content
         # except:
         #     return None
 
